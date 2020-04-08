@@ -133,6 +133,8 @@ Node 中的 Event Loop 和浏览器中的是完全不相同的东西。Node.js�
 
 ![](https://camo.githubusercontent.com/58779606d55020cd7c815402ccdaea48dcd94aec/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031392f312f31312f313638336438313637346630373665623f773d35343326683d32323326663d706e6726733d3831373535)
 
+Node.js 的运行机制如下:
+
 *   V8引擎解析JavaScript脚本。
 *   解析后的代码，调用Node API。
 *   libuv库负责Node API的执行。它将不同的任务分配给不同的线程，形成一个Event Loop（事件循环），以异步的方式将任务的执行结果返回给V8引擎。
@@ -203,8 +205,8 @@ setImmediate()的回调会被加入check队列中，从event loop的阶段图可
       console.log('promise3')
     })
     console.log('end')
-    //start=>end=>promise3=>timer1=>timer2=>promise1=>promise2
-    
+    //start=>end=>promise3=>timer1=>promise1=>timer2=>promise2
+
 
 *   一开始执行栈的同步任务（这属于宏任务）执行完毕后（依次打印出start end，并将2个timer依次放入timer队列）,会先去执行微任务（**这点跟浏览器端的一样**），所以打印出promise3
 *   然后进入timers阶段，执行timer1的回调函数，打印timer1，并将promise.then回调放入microtask队列，同样的步骤执行timer2，打印timer2；这点跟浏览器端相差比较大，**timers阶段有几个setTimeout/setInterval都会依次执行**，并不像浏览器端，每执行一个宏任务后就去执行一个微任务（关于Node与浏览器的 Event Loop 差异，下文还会详细介绍）。
@@ -232,7 +234,6 @@ Node端事件循环中的异步队列也是这两种：macro（宏任务）队�
       console.log('immediate');
     });
     
-
 *   对于以上代码来说，setTimeout 可能执行在前，也可能执行在后。
 *   首先 setTimeout(fn, 0) === setTimeout(fn, 1)，这是由源码决定的  
     进入事件循环也是需要成本的，如果在准备时候花费了大于 1ms 的时间，那么在 timer 阶段就会直接执行 setTimeout 回调
@@ -251,7 +252,7 @@ Node端事件循环中的异步队列也是这两种：macro（宏任务）队�
     })
     // immediate
     // timeout
-    
+
 
 在上述代码中，setImmediate 永远先执行。因为两个代码写在 IO 回调中，IO 回调是在 poll 阶段执行，当回调执行完毕后队列为空，发现存在 setImmediate 回调，所以就直接跳转到 check 阶段去执行回调了。
 
@@ -278,7 +279,7 @@ Node端事件循环中的异步队列也是这两种：macro（宏任务）队�
      })
     })
     // nextTick=>nextTick=>nextTick=>nextTick=>timer1=>promise1
-    
+
 
 ## 五、Node与浏览器的 Event Loop 差异
 -------------------------
@@ -300,7 +301,7 @@ Node端事件循环中的异步队列也是这两种：macro（宏任务）队�
             console.log('promise2')
         })
     }, 0)
-    
+
 
 浏览器端运行结果：`timer1=>promise1=>timer2=>promise2`
 
@@ -324,7 +325,34 @@ Node端运行结果分两种情况：
 Node端的处理过程如下：  
 ![](https://camo.githubusercontent.com/34b3491060826045c67bd57c6dcf97222620a722/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031392f312f31322f313638343164356638353436383034373f773d35393826683d33333326663d67696626733d343637363635)
 
+- event loop 的每个阶段都有一个任务队列
+- 当 event loop 到达某个阶段时，将执行该阶段的任务队列，直到队列清空或执行的回调达到系统上限后，才会转入下一个阶段
+- 当所有阶段被顺序执行一次后，称 event loop 完成了一个 tick
+
+```javascript
+const fs = require('fs')
+
+fs.readFile('test.txt', () => {
+  console.log('readFile')
+  setTimeout(() => {
+    console.log('timeout')
+  }, 0)
+  setImmediate(() => {
+    console.log('immediate')
+  })
+})
+```
+
+执行结果:
+
+```shell
+readFile
+immediate
+timeout
+```
+
 ## 六、总结
+
 ----
 
 浏览器和Node 环境下，microtask 任务队列的执行时机不同
@@ -334,8 +362,7 @@ Node端的处理过程如下：
 
 ## 后记
 
-
-文章于2019.1.16晚，对最后一个例子在node运行结果，重新修改！再次特别感谢[zy445566](https://juejin.im/user/59c335e95188254f531d0b51)和[BuptStEve](https://github.com/BuptStEve)的精彩点评，**由于node版本更新到11，Event Loop运行原理发生了变化，一旦执行一个阶段里的一个宏任务(setTimeout,setInterval和setImmediate)就立刻执行微任务队列，这点就跟浏览器端一致**。
+**由于node版本更新到11，Event Loop运行原理发生了变化，一旦执行一个阶段里的一个宏任务(setTimeout,setInterval和setImmediate)就立刻执行微任务队列，这点就跟浏览器端一致**。
 
 参考文章
 ----
