@@ -13,19 +13,46 @@ HyperText超文本 图片视频表格等
 Markup Language 标记语言 <h1></h1>
 
 <!doctype html>渲染模式和HTML版本
-HTML语法：标签和属性不区分大小写，推荐小写，可以不闭合，image />,属性值用双引号包裹，可省略。
+
+HTML语法：
+
+- 标签和属性不区分大小写，推荐小写，
+
+- 可以不闭合，image />,
+
+- 属性值用双引号包裹，
+
+- 属性值有些可省略 
+
 文本标签
-引用：blockquote长引用,cite作品名等短引用，q前文引用
-强调：strong 强调突出，重要严重紧急，em重音，突出的词
+引用：
+
+- blockquote“长引用,
+- cite：作品名等短引用，
+- q：前文引用
+
+强调：
+
+- strong ：强调突出，重要严重紧急，
+
+- em：重音，突出的词
+
 内容划分：head nav main article aside(导航链接，推荐，广告等，不属于页面主要内容) footer 
-语义化：HTML中元素，属性，属性值都拥有某些含义。
-谁在使用HTML，语义化好处
-开发者：修改。维护页面-代码可读性，可维护性
-浏览器：渲染页面
-搜素引擎：提供关键词，排序-搜素引擎优化
-屏幕阅读器：给盲人获得页面-提升无障碍性
+**语义化**
+
+HTML中元素，属性，属性值都拥有某些含义。
+**谁在使用HTML及语义化好处**
+
+- 开发者：修改。维护页面-代码可读性，可维护性
+- 浏览器：渲染页面
+- 搜素引擎：提供关键词，排序-搜素引擎优化
+
+- 屏幕阅读器：给盲人获得页面-提升无障碍性
+
 传达内容，而不是样式
-如何做到语义化：了解标签属性含义，思考什么标签最适合描述这个内容，尽量不用可视化工具生成代码而是手写代码
+**如何做到语义化**
+
+了解标签属性含义，思考什么标签最适合描述这个内容，尽量不用可视化工具生成代码而是手写代码
 
 #### 1.从规范的角度理解`HTML`，从分类和语义的角度使用标签
 
@@ -38,27 +65,25 @@ HTML5语义标签：aside(定义页面内容之外的内容)，footer,header,nav
 1.页边距
 IE默认为10px，通过body的margin属性设置
 FF默认为8px，通过body的padding属性设置
-要清除页边距一定要清除这两个属性值
-代码如下:
+要清除页边距一定要清除这两个属性值代码如下:
 
-```
+```css
 body {
 margin:0;
 padding:0;
-}1234
+}
 ```
 
 2.段间距
 IE默认为19px，通过p的margin-top属性设置
 FF默认为1.12em，通过p的margin-bottom属性设
-p默认为块状显示，要清除段间距，一般可以设置
-代码如下:
+p默认为块状显示，要清除段间距，一般可以设置代码如下:
 
-```
+```css
 p {
 margin-top:0;
 margin-bottom:0;
-}1234
+}
 ```
 
 3.标题样式
@@ -72,46 +97,40 @@ h5 {font-size: .83em; margin: 1.5em 0 }
 h6 {font-size: .75em; margin: 1.67em 0 }
 ```
 
-要清除标题样式，一般可以设置
-代码如下:
+要清除标题样式，一般可以设置代码如下:
 
-要清除标题样式，一般可以设置
-代码如下:
-
-```
+```css
 hx {
 font-weight:normal;
 font-size:value;
-}1234
+}
 ```
 
 4.列表样式
 IE默认为40px，通过ul、ol的margin属性设置
 FF默认为40px，通过ul、ol的padding属性设置
 dl无缩进，但起内部的说明元素dd默认缩进40px，而名称元素dt没有缩进。
-要清除列表样式，一般可以设置
-代码如下:
+要清除列表样式，一般可以设置代码如下:
 
-```
+```css
 ul, ol, dd{
 list-style-type:none;/*清楚列表样式符*/
 margin-left:0;/*清楚IE左缩进*/
 padding-left:0;/*清楚非IE左缩进*/
-}12345
+}
 ```
 
 5.元素居中
 IE默认为text-align:center;
 FF默认为margin-left:auto;margin-right:auto;
 6.超链接样式
-a 样式默认带有下划线，显示颜色为蓝色，被访问过的超链接变紫色，要清除链接样式，一般可以设置
-代码如下:
+a 样式默认带有下划线，显示颜色为蓝色，被访问过的超链接变紫色，要清除链接样式，一般可以设置代码如下:
 
-```
+```css
 a {
 text-decoration:none;
 color:#colorname;
-}1234
+}
 ```
 
 7 鼠标样式
@@ -122,7 +141,7 @@ IE默认为紫色2px的边框线
 FF默认为蓝色2px的边框线
 要清除图片链接样式，一般可以设置
 
-```
+```css
 img {
 border:0;
 }
@@ -132,36 +151,36 @@ border:0;
 
 1.浏览器兼容问题一: 不同浏览器的标签默认的外补丁和内补丁不同
 
-解决方案：CSS里    *{margin:0;padding:0;}     
+解决方案：CSS里    `*{margin:0;padding:0;}`     
 
 2.浏览器兼容问题二: IE6 的横向margin加倍
 
 产生原因：块属性 float 有横向margin
 
 
-解决方案：display:inline;
+解决方案：`display:inline;`
 
 3.浏览器兼容问题三：IE6 下有默认的行高
 
-解决方案：overflow:hidden 或者用font-size:0   line-height: xxpx;
+解决方案：`overflow:hidden` 或者用`font-size:0   line-height: xxpx;`
 
 4.浏览器兼容问题四：在各浏览器下img有间隙
 
 解决方案：float  浮动;
 
-5.浏览器兼容问题五：IE6 不识别最大宽度和最小高度 意味min-width/height 和Max-width/height 在IE6中没效果
+5.浏览器兼容问题五：IE6 不识别最大宽度和最小高度 意味`min-width/height` 和Max-width/height 在IE6中没效果
 
-解决方案：(1)：.abc{border:1px blue solid;width:200px;height:200px;}
+解决方案：(1)：`.abc{border:1px blue solid;width:200px;height:200px;}`
 
- html>body .abc{width:auto;height:auto;min-width:200px;min-height:200px;}
+ `html>body .abc{width:auto;height:auto;min-width:200px;min-height:200px;}`
 
-(2)：.abc{width:200px;height:200px;_width:200px;_height:200px;}（因为ie6有一个特征，当定义一个高度时，如果内容超过高度，元素会自动调整高度。）
+(2)：`.abc{width:200px;height:200px;_width:200px;_height:200px;}（`因为ie6有一个特征，当定义一个高度时，如果内容超过高度，元素会自动调整高度。）
 
 6.浏览器兼容问题六：li之间的间距
 
-解决方案:li 设置 vertical-align:middle;
+解决方案:li 设置 `vertical-align:middle;`
 
-7.浏览器兼容问题七：优先级!important  在IE6中!important 具有bug 在同一组属性中 !important 起不了作用
+7.浏览器兼容问题七：优先级`!important`  在IE6中!important 具有bug 在同一组属性中 !important 起不了作用
 
 8.浏览器兼容问题八：IE6 不支持 fixed
 
@@ -227,7 +246,7 @@ content的参数有all,none,index,noindex,follow,nofollow。默认是all
 
 6.viewport(视图模式)
 
-```
+```html
 <meta name="viewport" 
 content="
 width=device-width,  //viewport的高度
@@ -243,31 +262,31 @@ http-equiv顾名思义，相当于http的文件头作用，它可以向浏览器
 
 meta标签的http-equiv属性语法格式是：
 
-```
+```html
 <meta http-equiv="参数"content="参数变量值">
 ```
 
 1.X-UA-Compatible 浏览模式
 
-```
+```html
 <meta http-equiv="X-UA-Compatible" content="IE=5" />
 ```
 
 像是使用了 Windows Internet Explorer 7 的 Quirks 模式，这与 Windows Internet Explorer 5 显示内容的方式很相似。
 
-```
+```html
 <meta http-equiv="X-UA-Compatible" content="IE=7" />
 ```
 
 无论页面是否包含 <!DOCTYPE> 指令，均使用 Windows Internet Explorer 7 的标准渲染模式。
 
-```
+```html
 <meta http-equiv="X-UA-Compatible" content="IE=8" />
 ```
 
 开启 IE8 的标准渲染模式，但由于本身 X-UA-Compatible 文件头仅支持 IE8 以上版本，因此等同于冗余代码。
 
-```
+```html
 <meta http-equiv="X-UA-Compatible" content="edge" />
 ```
 
@@ -276,7 +295,7 @@ Edge 模式通知 Windows Internet Explorer 以最高级别的可用模式显示
 2.Expires 期限
 可以用于设定网页的到期时间，一旦网页过期，必须到服务器上重新传输
 
-```
+```html
 <meta http-equiv="expires"content="Fri,01Jan201618:18:18GMT">
 ```
 
@@ -284,7 +303,7 @@ Edge 模式通知 Windows Internet Explorer 以最高级别的可用模式显示
 说明：禁止浏览器从本地计算机的缓存中访问页面内容。
 注意：这样设定，访问者将无法脱机浏览。
 
-```
+```html
 <meta http-equiv="Pragma" content="no-cache">
 ```
 
@@ -292,7 +311,7 @@ Edge 模式通知 Windows Internet Explorer 以最高级别的可用模式显示
 说明：自动刷新并指向新页面
 注意：其中的2是指停留2秒钟后自动刷新到URL网址。
 
-```
+```html
 <meta http-equiv="Refresh" content="2;URL=http://www.jb51.net">
 ```
 
@@ -300,7 +319,7 @@ Edge 模式通知 Windows Internet Explorer 以最高级别的可用模式显示
 说明：如果网页过期，那么存盘的cookie将被删除
 注意：必须使用GMT的时间格式。
 
-```
+```html
 <meta http-equiv="Set-Cookie"content="cookievalue=xxx;expires=Friday,12-Jan-200118:18:18GMT；path=/">
 ```
 
@@ -308,20 +327,20 @@ Edge 模式通知 Windows Internet Explorer 以最高级别的可用模式显示
 说明：强制页面在当前窗口以独立页面显示。
 注意：用来防止别人在框架里调用自己的页面。
 
-```
+```html
 <meta http-equiv="Window-target" content="_blank">
 ```
 
 7.content-Type 显示字符集的设定
 说明：设定页面使用的字符集
 
-```
+```html
 <meta http-equiv="content-Type" content="text/html;charset=gb2312">
 ```
 
 8.content-Language 显示语言的设定
 
-```
+```html
 <meta http-equiv="Content-Language" content="zh-cn"/>
 ```
 
@@ -355,7 +374,7 @@ manifest 文件可分为三个部分：
 
 我们知道每次使用离线应用时，在有网络连接的情况下，浏览器都会逐字节的检查menifest文件是否有更新，而当menifest文件有更新时，就会重新下载menifest文件中列出的所有资源，资源下载成功后会触发updateready事件。这时离线应用本身并不会立即更新，而会在下次访问时才更新，这就是我们所说的二次更新。我们在开发web程序时，一般都是前端页面和后端接口同步更新，但是二次更新问题会导致页面更新不受控制，无法和后端接口同步更新，因此要做好后端接口的向前兼容，这迫使我们抛弃传统的web开发思路而采取native开发思路来管理离线应用。我们可以通过检测updateready事件，在新的缓存可用时通知用户更新。
 
-```
+```js
 window.addEventListener('load', function(e) {  
     window.applicationCache.addEventListener('updateready', function(e) { 
         //缓存更新完毕 
@@ -374,7 +393,7 @@ window.addEventListener('load', function(e) {
 
 在标准的html5浏览器中，我们可以放心的使用Application Cache，并且不需要任何设置。但是在webview中，则可能需要显示的设置，比如android系统的webview默认是不支持Application Cache的，因此需要显示设置：
 
-```
+```java
 webView.getSettings().setAppCacheEnabled(true);        //默认是关闭的
 webView.getSettings().setAppCacheMaxSize(1024*1024*5); //缓存大小
 webView.getSettings().setAppCachePath("路径");          //缓存路径
