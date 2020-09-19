@@ -119,7 +119,7 @@ BFC布局规则：
 必须定义width或zoom:1，同时不能定义height，使用overflow:auto时，浏览器会自动检查浮动区域的高度
 
 
-方法二： 使用伪元素清楚浮动
+方法二： 使用伪元素清除浮动
 ```css
 .container::after {
   content: " ";
@@ -329,7 +329,7 @@ display: -webkit-box;
  - skewY(angle)
  - perspective(n)	
    - 为 3D 转换元素定义透视视图。
- 
+
 
 ### CSS预处理器
  - 嵌套           
@@ -561,7 +561,7 @@ content 属性专门应用在 before/after 伪元素上，用于插入额外内�
 
 ### 元素竖向的百分比设定是相对于容器的高度吗？
 
-元素竖向的百分比设定是相对于容器的宽度，而不是高度
+元素竖向的margin百分比设定是相对于容器的宽度，而不是高度
 
 
 

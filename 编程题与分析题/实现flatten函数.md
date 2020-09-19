@@ -48,4 +48,21 @@ function flatter1(arr) {
     }
     return newArr
 }
+
+/**
+ * 根据参数决定展开深度，默认全部展开
+ */
+function flattenWithDeep(arr,deep=Infinity){
+    let _arr=[...arr];
+    let res =[];
+    for(let i = 0;i<_arr.length;i++){
+        let item=_arr[i];
+        if(Array.isArray(item)&&deep>0){
+           res=[...res,...flattenWithDeep(item,deep-1)];
+        }else{
+           res.push(item);
+        }
+    }
+    return res;
+}
 ```

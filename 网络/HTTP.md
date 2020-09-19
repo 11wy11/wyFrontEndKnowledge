@@ -193,6 +193,8 @@ HTTP2中
 
 ![http2](../img/http2Connet.png)
 
+![image-20200817233000224](E:\前端复习\前端知识点\wyFrontEndKnowledge\image\image-20200817233000224.png)
+
 
 
 ### Header 压缩
