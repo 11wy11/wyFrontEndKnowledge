@@ -224,6 +224,18 @@ import store from './store'
 
 v-if(判断是否隐藏)、v-for(把数据遍历出来)、v-bind(绑定属性)、v-model(实现双向绑定)
 
+v-on 事件绑定
+
+v-cloak 在浏览器加载慢的时候，可能会显示vue源码，可以通过设置dom的v-cloak 指令，并配合设置css [v-cloak]:{display:none;}
+
+用key管理可复用的元素，v-for的key一般使用数值或者字符串类型的值
+
+v-show v-if 切换时条件块中的事件监听器和子组件适当地被销毁和重建，是惰性的，频繁切换推荐使用v-show 
+
+变异方法：通过将被监听的数组的变异方法进行包裹，实现push,pop,shift,unshift触发视图更新
+
+对于filter，map等可以通过新数组赋值替换旧数组的方式触发视图更新，用一个含有相同元素的数组去替换原数组是高效的操作，依托于内部实现的启发式方法。
+
 ### vue 的双向绑定的原理是什么(常考)
 
 vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过 Object.defineProperty()来劫持各个属性的 setter，getter，在数据变动时发布消息给订阅者，触发相应的监听回调。
@@ -321,6 +333,8 @@ axios 是请求后台资源的模块。 npm i axios -S
 ![image-20200320224838221](../img/image-20200320224838221.png)
 
 因为vue组件高度复用增加Key可以标识组件的唯一性，为了更好地区别各个组件 key的作用主要是为了高效的更新虚拟DOM
+
+当vue用v-for更新已渲染过的元素列表时，默认用”就地复用“策略，如果数据项的顺序被改变，vue不会移动dom元素来匹配数据项的顺序，而是简单复用此处每个元素，并且确保它在特定索引下显示已被渲染过的每个元素。
 
 ### Vue diff算法
 
@@ -703,3 +717,109 @@ class Vue {
 ```
 
 ![image-20200320223805392](../img/image-20200320223805392.png)
+
+### 自定义指令
+
+Vue.directive 全局注册，directives:{} 局部注册
+
+### 绑定样式
+
+数组语法：:class="[class1,class2]";
+
+对象语法:  :class="{style1:true,style2:true}"
+
+数组也可以使用对象，实现固定某种class，另一个动态切换
+
+:class="[{class1:isActive},class2]"
+
+绑定内联样式中的多重值是什么？
+
+<div :style="{display:['-webkit-box','-ms-flexbox','flex]}">
+</div>
+
+这样写只会渲染数组中最后一个被浏览器支持的值。
+
+### 事件修饰符
+
+1. stop 阻止事件冒泡
+2. capture 事件捕获，事件流改为捕获模式，在父级元素上设置，若有多个该修饰符，则由外向内触发
+3. self 只会触发自己范围内的事件，为跳过冒泡和捕获事件，只有直接作用在该元素的事件才执行，如果不是，冒泡跳过该元素
+4. once 只会触发一次
+5. prevent 阻止默认事件的发生
+6. passive：执行默认行为，为什么需要？浏览器只有等内核线程执行到事件监听器对应的JavaScript代码时，才能知道内部是否会调用preventDefault，来阻止默认行为，所以浏览器本身没有办法对这类场景进行优化，这种场景下，用户的手势事件无法快速产生，会导致页面无法快速执行滑动逻辑，从而让用户感觉页面卡顿，加上passive后，浏览器不用每次事件发生都去查询，一般用在滚动监听@scroll，@touchmove
+7. 顺序很重要，：click.prevent.self,会阻止所以的单击，:click.self.prevent,只会阻止对于元素自身的单击
+
+### 按键修饰符
+
+keydown,keyup,keypress
+
+1. .enter
+
+2. .tab
+
+3. .delete
+
+4. .esc
+
+5. .space
+
+6. .up
+
+7. .down
+
+8. .left
+
+9. .right
+
+   例如：输入完成回车触发，：keyup.enter="xxxx" methods:{xxxx:function(){}}
+
+### 系统修饰符
+
+1. .ctrl
+
+2. .alt
+
+3. .shift
+
+4. .meta
+
+   与keyup事件一起用时，事件触发时修饰符必须处于按下状态，keyup.ctrl,按下Ctrl释放其他键时触发
+
+**exact 修饰符如何使用？**
+
+@click.ctrl.exact="onctrlclick" // 只有Ctrl按下触发， 同时按下其他键不会触发
+
+为什么在HTML中监听事件？ 在HTML模板中可以直观定位JavaScript代码中对应的方法，无需再javascript中手动绑定事件，viewModel的代码更为纯粹的逻辑，和dom完全解耦
+
+### 数据双向绑定
+
+v-model
+
+常用修饰符.lazy,.trim,.number
+
+**如何在组件上实现双向绑定**：vue.template：‘<input :value="value" @input="$emit('input',$event.target.value)">’ props:['value']
+
+### 为什么data返回的是一个方法
+
+一个组件的data选项必须是一个函数，因此每个实例可以维护一份被返回对象的独立的拷贝
+
+### 插槽slot
+
+1. 插槽内容:
+
+   组件的一块HTML模板，<slot>承载分发内容的出口，父组件中<child>html content</child>，子组件<a>ddd<slot></slot>
+
+2. 编译作用域:
+
+   插槽跟模板一样可以访问相同的实例的属性，而不能访问子组件的作用域
+
+3. 默认内容：
+
+   为插槽设置默认内容<slot>默认显示</slot>
+
+4. 具名插槽v-slot(#)指令取代了slot和slot-scope，向具名插槽提供内容时，<slot name="xx"></slot> <template v-slot="xx"></template>
+
+5. 作用域插槽 <slot :user="user">绑定特性，让user在父级的插槽内容中可用，但vue2.6.0废弃
+
+6. 解构插槽：<current-user v-slot=“{user,userName:name（// 重命名）}” 
+
