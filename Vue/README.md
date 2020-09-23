@@ -823,3 +823,53 @@ v-model
 
 6. 解构插槽：<current-user v-slot=“{user,userName:name（// 重命名）}” 
 
+## Vue-Router
+
+hash模式url里面永远带着#号，我们在开发当中默认使用这个模式。那么什么时候要用history模式呢？如果用户考虑url的规范那么就需要使用history模式，因为history模式没有#号，是个正常的url适合推广宣传。当然其功能也有区别，比如我们在开发app的时候有分享页面，那么这个分享出去的页面就是用vue或是react做的，咱们把这个页面分享到第三方的app里，有的app里面url是不允许带有#号的，所以要将#号去除那么就要使用history模式，但是使用history模式还有一个问题就是，在访问二级页面的时候，做刷新操作，会出现404错误，那么就需要和后端人配合让他配置一下apache或是nginx的url重定向，重定向到你的首页路由上就ok啦。
+
+history:pushState与replaceState
+
+##### 路由传参：query,param
+
+query key=value的形式，通过vm.$route.query, this.$router.push({path:'',query:{xxx:123}})
+
+而params同样通过$route.params,在定义路由时以占位符（:参数名）将需要传递的参数指定到路由地址中 /info/:email/:password, 使用$router.push({name:'info',params:{email:'xxx',password:'xxx'}}),或者$router.push({path:'/info/${this.email}/${this.password}'})
+
+$router.push()// 控制跳转
+
+replace
+
+go
+
+注意：当传递的参数为一个对象并且path和params共同使用时，对象中params属性不会起作用，需要采用命名路由的方式进行跳转，或者直接使用带参数的全路径
+
+#### 组件与VueRouter解耦
+
+布尔解耦：
+
+定义路由时使用props:true,**只能实现基于param方式进行传参的解耦**
+
+对象模式解耦：
+
+props:{name:'xxxx'}
+
+函数模式解耦：
+
+props:(route)=>{
+
+id:route.query.id,
+
+name:'xxx'
+
+}
+
+#### 打包后资源访问不到的问题
+
+dist文件夹放在后端一起打包时，index.html显示为空，主要通过修改config/index.js 将assetsPublicPath设置为:'./'
+
+#### history模式手动刷新会出现404，需要后端配置支持
+
+
+
+
+
