@@ -128,3 +128,119 @@ bezier曲线在线效果网址 [cubic-bezier.com](http://cubic-bezier.com)
  - 部分情况下优于JS
  - JS可以做到更精细
  - 含高危属性，会让性能变差 (如box-shadow)
+
+### CSS动画性能优化
+
+**目前对提升移动端CSS3动画体验的主要方法有几点：**
+**1.尽可能多的利用硬件能力，如使用3D变形来开启GPU加速**
+
+```
+-webkit-transform: translate3d(0, 0, 0);``-moz-transform: translate3d(0, 0, 0);``-ms-transform: translate3d(0, 0, 0);``transform: translate3d(0, 0, 0);
+```
+
+ 一个元素通过translate3d右移500px的动画流畅度会明显优于使用left属性；
+
+原因是因为：
+
+  CSS动画属性会触发整个页面的重排relayout、重绘repaint、重组recomposite
+  Paint通常是其中最花费性能的，尽可能避免使用触发paint的CSS动画属性，这也是为什么我们推荐在CSS动画中使用webkit-transform: translateX(3em)的方案代替使用left: 3em，因为left会额外触发layout与paint，而webkit-transform只触发整个页面composite（这也是为什么推荐在CSS动画中使用webkit-transform: translateX(500px)的方案代替使用left: 500px）；
+
+如动画过程有闪烁（通常发生在动画开始的时候），可以尝试下面的Hack：
+
+```
+-webkit-backface-visibility: hidden;``-moz-backface-visibility: hidden;``-ms-backface-visibility: hidden;``backface-visibility: hidden;`` ` `-webkit-perspective: 1000;``-moz-perspective: 1000;``-ms-perspective: 1000;``perspective: 1000;
+```
+
+ **2.尽可能少的使用box-shadows与gradients**
+
+box-shadows与gradients往往都是页面的性能杀手，尤其是在一个元素同时都使用了它们.
+
+**3.尽可能的让动画元素不在文档流中，以减少重排**
+
+```
+position: fixed;``position: absolute;
+```
+
+现代浏览器在使用CSS3动画时，以下四种情形绘制的效率更高：
+
+- 改变位置
+- 改变大小
+- 旋转
+- 改变透明度
+
+其实，对于每一帧动画，浏览器可能要做以下工作
+
+1. 计算需要被加载到节点上的样式结果(样式重计算)
+2. 为每个节点生成图形和位置(重排)
+3. 将每个节点填充到图层中(重绘)
+4. 组合图层到页面上(图层重组)
+
+如果我们需要使得动画的性能提高，需要做的就是减少浏览器在动画运行时所需要做的工作。最好的情况是，改变的属性仅仅是图层的组合，变换（transform）和透明度（opacity）就属于这种情况
+
+现代浏览器如Chrome，Firefox，Safari和Opera都对变换和透明度采用硬件加速，但IE10+不是很确定是否硬件加速
+
+一些常用的改变时会触发重布局的属性：
+ 盒子模型相关属性会触发重布局：
+
+- width
+- height
+- padding
+- margin
+- display
+- border-width
+- border
+- min-height
+
+定位属性及浮动也会触发重布局：
+
+- top
+- bottom
+- left
+- right
+- position
+- float
+- clear
+
+改变节点内部文字结构也会触发重布局：
+
+- text-align
+- overflow-y
+- font-weight
+- overflow
+- font-family
+- line-height
+- vertival-align
+- white-space
+- font-size
+
+这么多常用属性都会触发重布局，可以看到，他们的特点就是可能修改整个节点的大小或位置，所以会触发重布局
+
+触发重绘的属性
+ 修改时只触发重绘的属性有：
+
+- color
+- border-style
+- border-radius
+- visibility
+- text-decoration
+- background
+- background-image
+- background-position
+- background-repeat
+- background-size
+- outline-color
+- outline
+- outline-style
+- outline-width
+- box-shadow
+
+这样可以看到，这些属性都不会修改节点的大小和位置，自然不会触发重布局，但是节点内部的渲染效果进行了改变，所以只需要重绘就可以了
+
+结论：
+
+动画给予了页面丰富的视觉体验。我们应该尽力避免使用会触发重布局和重绘的属性，以免失帧。最好提前申明动画，这样能让浏览器提前对动画进行优化。由于GPU的参与，现在用来做动画的最好属性是如下几个：
+
+- opacity
+- translate
+- rotate
+- scale
